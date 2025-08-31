@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv
+venv
+env
+
+# Config files not needed in container
+.vscode
+.idea
+*.log
+
+# Local env files
+.env
+*.env
+
+# Build / dist
+build/
+dist/
+*.egg-info/

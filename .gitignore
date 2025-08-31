@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.pot
+*.pyc
+
+# Virtual env
+.venv/
+env/
+venv/
+
+# VSCode / IDE
+.vscode/
+.idea/
+
+# Byte-compiled
+*.egg-info/
+.eggs/
+
+# Environment files
+.env
+*.env
+
+# Cache
+.cache/
+.mypy_cache/
+.pytest_cache/
+
+# Docker
+*.pid
+*.sock
+docker-compose.override.yml
+
+# Build / Dist
+build/
+dist/
+*.egg-info/
