@@ -1,0 +1,52 @@
+Text Architecture Diagram
+                       ┌────────────────────────────────────────────────┐
+                       │                    Clients                     │
+                       │  Web / Mobile / Admin Panel / Postman          │
+                       └───────────────▲────────────────────────────────┘
+                                       │ HTTPS (TLS)
+                                       │
+                          ┌────────────┴────────────┐
+                          │        API Edge         │
+                          │  NGINX/Traefik + WAF    │
+                          │  Rate-limit + gzip      │
+                          └────────────┬────────────┘
+                                       │
+                           ┌───────────▼───────────┐
+                           │   FastAPI App Layer   │
+                           │  (Gunicorn+Uvicorn)   │
+                           │                       │
+                           │ Routers:              │
+                           │  - Auth (optional)    │
+                           │  - Tests/Questions    │
+                           │  - Sessions           │
+                           │  - Submissions        │
+                           │  - Results            │
+                           │  - Leaderboard        │
+                           │  - Prediction         │
+                           └───────┬───┬───────────┘
+                                   │   │
+                    ┌──────────────┘   └──────────────┐
+                    │                                  │
+         ┌──────────▼──────────┐             ┌────────▼─────────┐
+         │  Domain Services    │             │   Async Workers   │
+         │  (pure logic)       │             │ (Celery/RQ/BT)    │
+         │  - Scoring          │             │ - finalize test   │
+         │  - Percentiles      │             │ - build distns    │
+         │  - Anti-cheat       │             │ - leaderboard gen │
+         └─────────┬───────────┘             └────────┬──────────┘
+                   │                                   │
+          ┌────────▼────────┐                ┌────────▼────────┐
+          │ Repositories    │                │ Message Broker   │
+          │ (SQLAlchemy)    │<──────────────►│  Redis/RabbitMQ  │
+          └───┬─────────┬───┘                └──────────────────┘
+              │         │
+    ┌─────────▼───┐   ┌─▼───────────┐
+    │ PostgreSQL   │   │ Redis       │
+    │ (RDS)        │   │ (cache+rl)  │
+    │ OLTP + batch │   │ idempotency │
+    └───────┬──────┘   └──────┬──────┘
+            │                 │
+   ┌────────▼────────┐   ┌────▼──────────┐
+   │ Object Storage  │   │ Observability │
+   │ S3 (exports)    │   │ OTel→Grafana  │
+   └─────────────────┘   │ Prom+Loki     │
